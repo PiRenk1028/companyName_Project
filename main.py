@@ -9,20 +9,38 @@ db = sql.connect(
 
 mycursor = db.cursor()
 
-def Add_Person():
+def get_name():
     first = input("First Name: ").strip()
     middle = input("Middle Name: ").strip()
     last = input("Last Name: ").strip()
     if first == '' or last == '':
         print("Invalid input. Please specify both a First and Last name")
-        return
+        return 0,0,0
     if middle == '':
         middle = "NULL"
+    return first,middle,last
+
+def Add_Person():
+    first,middle,last = get_name()
+    if first == 0:
+        return
     mycursor.execute(f"INSERT INTO Customers(firstName,middleName,lastName) \
 Values ('{first}','{middle}','{last}')")
 
 def Add_Loan():
-    pass
+    first,middle,last = get_name()
+    if first == 0:
+        return
+    mycursor.execute(f"SELECT customerID FROM Customers WHERE firstName = '{first}' AND middleName = '{middle}' AND lastName = '{last}'")
+    customerID = list(mycursor)[0][0]
+    try:
+        iAmount = float(input("Starting Amount: "))
+        interest = float(input("Interest Rate: "))/100
+    except Exception as e:
+        print("Invalid input. Must be numeric")
+        return
+    mycursor.execute(f"INSERT INTO Loans(customerID,initialAmount,currentAmount,interestRate) \
+Values ({customerID}, {iAmount}, {iAmount}, {interest})")
 
 def Add_Payment():
     pass
@@ -33,7 +51,10 @@ def Retrieve_Customers():
         print(x)
 
 def Retrieve_loans():
-    pass
+    mycursor.execute("SELECT firstName,lastName,currentAmount,interestRate \
+FROM Loans JOIN Customers ON Customers.customerID = Loans.customerID")
+    for x in mycursor:
+        print(x)
 
 while True:
     i = input("""What would you like to do?
@@ -45,7 +66,7 @@ while True:
     if i == '1':
         Add_Person()
     elif i == '2':
-        Add_Load()
+        Add_Loan()
     elif i == '3':
         Add_Payment()
     elif i == '4':

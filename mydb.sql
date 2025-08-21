@@ -37,3 +37,6 @@ CREATE TABLE Payments(
     FOREIGN KEY(customerID) REFERENCES Customers(customerID),
     FOREIGN KEY(loanID) REFERENCES Loans(loanID)
 );
+
+SELECT customerId FROM Customers
+WHERE firstName = "Joe" AND middleName = "M" AND lastName = "Smith";
