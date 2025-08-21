@@ -1,23 +1,39 @@
 -- CREATE DATABASE companyName;
 USE companyName;
 
-DROP TABLE IF EXISTS General;
-CREATE TABLE General(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS Customers CASCADE;
+DROP TABLE IF EXISTS Loans;
+DROP TABLE IF EXISTS Payments;
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+CREATE TABLE Customers(
+	customerID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     firstName VARCHAR(30) NOT NULL,
     middleName VARCHAR(30),
     lastName VARCHAR(30) NOT NULL,
     dateOfBirth DATE DEFAULT '2000-01-01',
     email VARCHAR(255)
 );
-
-INSERT INTO General(firstName, middleName, lastName,email)
-VALUES ("Lorem",NULL,"Ipsum",NULL),
-	   ("Daniel",NULL,"Stone",NULL),
-       ("Max",NULL,"Scherzer",NULL);
        
-SELECT *
-FROM General;
+CREATE TABLE Loans(
+	loanID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	customerID INT UNSIGNED NOT NULL,
+    dateCreated DATE DEFAULT (CURDATE()), 
+    initialAmount INT NOT NULL,
+    currentAmount INT NOT NULL,
+    interestRate FLOAT(10),
+    FOREIGN KEY(customerID) REFERENCES Customers(customerID)
+);
 
 
-
+CREATE TABLE Payments(
+	paymentID BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    loanID INT UNSIGNED NOT NULL,
+	customerID INT UNSIGNED NOT NULL,
+    datePaid DATE DEFAULT (CURDATE()),
+	amountPaid INT UNSIGNED,
+    FOREIGN KEY(customerID) REFERENCES Customers(customerID),
+    FOREIGN KEY(loanID) REFERENCES Loans(loanID)
+);
