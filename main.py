@@ -43,8 +43,30 @@ def Add_Loan():
 Values ({customerID}, {iAmount}, {iAmount}, {interest})")
 
 def Add_Payment():
-    pass
+    first,middle,last = get_name()
+    if first == 0:
+        return
+    mycursor.execute(f"SELECT customerID FROM Customers WHERE firstName = '{first}' AND middleName = '{middle}' AND lastName = '{last}'")
+    customerID = list(mycursor)[0][0]
+    mycursor.execute(f"SELECT loanID, currentAmount, interestRate FROM Loans WHERE customerID = {customerID}")
+    loans = []
+    for x in mycursor:
+        print(x)
+        loans.append(str(x[0]))
+    loanID = input("What loan would you like to pay off? ")
+    if loanID not in loans:
+        print("Invalid input. No such loan exists")
+        return
+    mycursor.execute(f"SELECT currentAmount FROM Loans WHERE loanID = {loanID}")
+    currentAmount = list(mycursor)[0][0]
+    amountPaid = float(input(f"How much would you like to pay to loan #{loanID} (max: ${currentAmount})? "))
+    if amountPaid > currentAmount:
+        print("ERROR: Amount paid is GREATER THAN the amount on the account")
+        print("Credit was not added to the loan.")
+        return
 
+    mycursor.execute(f"UPDATE Loans SET currentAmount = {currentAmount-amountPaid} WHERE loanID = {loanID}")
+    
 def Retrieve_Customers():
     mycursor.execute("SELECT * FROM Customers")
     for x in mycursor:
@@ -61,7 +83,8 @@ while True:
 1. Add Person
 2. Add Loan
 3. Add Payment
-4. See active loans
+4. See customers
+5. See loans
 : """)
     if i == '1':
         Add_Person()
@@ -71,6 +94,7 @@ while True:
         Add_Payment()
     elif i == '4':
         Retrieve_Customers()
+    elif i == '5':
         Retrieve_loans()
     else:
         print("Invalid selection")
