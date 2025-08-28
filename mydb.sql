@@ -38,5 +38,17 @@ CREATE TABLE Payments(
     FOREIGN KEY(loanID) REFERENCES Loans(loanID)
 );
 
-SELECT customerId FROM Customers
-WHERE firstName = "Joe" AND middleName = "M" AND lastName = "Smith";
+
+CREATE TABLE PaymentPlans(
+	planID INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	paymentID BIGINT UNSIGNED NOT NULL,
+    loanID INT UNSIGNED NOT NULL,
+	customerID INT UNSIGNED NOT NULL,
+    startDate DATE DEFAULT (CURDATE()),
+    endDate DATE NOT NULL,
+	amountDue INT UNSIGNED,
+    FOREIGN KEY(paymentID) REFERENCES Payments(paymentID),
+    FOREIGN KEY(customerID) REFERENCES Customers(customerID),
+    FOREIGN KEY(loanID) REFERENCES Loans(loanID)
+);
+
