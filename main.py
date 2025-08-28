@@ -78,30 +78,31 @@ FROM Loans JOIN Customers ON Customers.customerID = Loans.customerID")
     for x in mycursor:
         print(x)
 
-while True:
-    i = input("""What would you like to do?
-1. Add Person
-2. Add Loan
-3. Add Payment
-4. See customers
-5. See loans
-: """)
-    if i == '1':
-        Add_Person()
-    elif i == '2':
-        Add_Loan()
-    elif i == '3':
-        Add_Payment()
-    elif i == '4':
-        Retrieve_Customers()
-    elif i == '5':
-        Retrieve_loans()
-    else:
-        print("Invalid selection")
+if __name__ == '__main__':
+    while True:
+        i = input("""What would you like to do?
+    1. Add Person
+    2. Add Loan
+    3. Add Payment
+    4. See customers
+    5. See loans
+    : """)
+        if i == '1':
+            Add_Person()
+        elif i == '2':
+            Add_Loan()
+        elif i == '3':
+            Add_Payment()
+        elif i == '4':
+            Retrieve_Customers()
+        elif i == '5':
+            Retrieve_loans()
+        else:
+            print("Invalid selection")
 
-    db.commit()    
+        db.commit()    
 
-for x in mycursor:
-    print(x)
+    for x in mycursor:
+        print(x)
 
-print("Done")
+    print("Done")
