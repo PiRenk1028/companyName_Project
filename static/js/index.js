@@ -10,8 +10,13 @@ document.getElementById('form').addEventListener('submit', function(event) {
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data)
   })
+  .then(response => response.json())
+    .then(result => {
+        document.getElementById("Output").innerHTML = `Name: ${result['First Name']} ${result['Last Name']}
+        Amount: $${result['Loan']}`;
+      })
   .catch(error => {
-        console.error('Error:', error);
+          console.error('Error:', error);
         // Handle errors
     });
 
